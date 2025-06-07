@@ -1,0 +1,39 @@
+openapi: 3.1.0
+info:
+  title: Chronos Scheduler API
+  version: "1.0"
+paths:
+  /jobs:
+    post:
+      summary: Schedule a new job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        '201':
+          description: Job scheduled
+    get:
+      summary: List all scheduled jobs
+      responses:
+        '200':
+          description: List of jobs
+
+components:
+  schemas:
+    JobRequest:
+      type: object
+      properties:
+        job_name:
+          type: string
+        schedule:
+          type: string
+          example: "*/5 * * * *"
+        priority:
+          type: integer
+          default: 5
+        retries:
+          type: integer
+          default: 3
