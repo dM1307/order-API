@@ -1,0 +1,8 @@
+flask
+flask_sqlalchemy
+flasgger
+psycopg2-binary
+python-dotenv
+pytest
+flake8
+pylint
