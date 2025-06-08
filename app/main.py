@@ -7,8 +7,8 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Swagger UI
-SWAGGER_URL = "/docs"
-API_URL = "/openapi.yaml"
+SWAGGER_URL = "/v1/docs"
+API_URL = "/specification/openapi.yaml"
 swagger_bp = get_swaggerui_blueprint(SWAGGER_URL, API_URL)
 app.register_blueprint(swagger_bp, url_prefix=SWAGGER_URL)
 
@@ -16,7 +16,7 @@ app.register_blueprint(swagger_bp, url_prefix=SWAGGER_URL)
 app.register_blueprint(job_bp, url_prefix="/jobs")
 
 
-@app.route("/openapi.yaml")
+@app.route("/specification/openapi.yaml")
 def spec():
     return send_from_directory("app", "openapi.yaml")
 
