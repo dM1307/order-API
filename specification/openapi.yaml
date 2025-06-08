@@ -123,13 +123,13 @@ components:
   securitySchemes:
     OAuth2:
       type: oauth2
-      description: OAuth2 security scheme for API access
       flows:
-        clientCredentials:
-          tokenUrl: /oauth/token
+        authorizationCode:
+          authorizationUrl: http://localhost:8081/realms/chronos-realm/protocol/openid-connect/auth
+          tokenUrl:         http://localhost:8081/realms/chronos-realm/protocol/openid-connect/token
           scopes:
-            read: Grants read access to the API
-            write: Grants write access to the API
+            jobs:read:  Read job data
+            jobs:write: Schedule and modify jobs
   schemas:
     JobRequest:
       type: object

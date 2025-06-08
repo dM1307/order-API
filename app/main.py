@@ -9,8 +9,18 @@ app.config.from_object(Config)
 # Swagger UI
 SWAGGER_URL = "/v1/docs"
 API_URL = "/specification/openapi.yaml"
-swagger_bp = get_swaggerui_blueprint(SWAGGER_URL, API_URL)
-app.register_blueprint(swagger_bp, url_prefix=SWAGGER_URL)
+swagger_ui_bp = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={"appName": "Chronos Scheduler UI"},
+    swagger_ui_oauth_config={
+        "clientId": "chronos-swagger",
+        "clientSecret": "<YOUR_CLIENT_SECRET>",
+        "usePkceWithAuthorizationCodeGrant": True,
+        "scopes": "jobs:read jobs:write"
+    }
+)
+app.register_blueprint(swagger_ui_bp, url_prefix=SWAGGER_URL)
 
 # Routes
 app.register_blueprint(job_bp, url_prefix="/jobs")
