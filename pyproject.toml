@@ -1,14 +1,18 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "chronos-api"
+name = "cp_api"
 version = "0.1.0"
 description = "Flask REST API for Chronos Scheduler"
+dynamic = ["requires-python"]
 dependencies = [
   "flask",
   "flask-swagger-ui",
   "pydantic",
-  "chronos-lib @ file://../chronos-lib"
+  "cp_lib @ git+https://github.com/dM1307/Order-lib.git@add-api-logic#egg=cp_lib"
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]

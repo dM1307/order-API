@@ -10,4 +10,4 @@ flask-swagger-ui
 requests
 pyyaml
 pydantic
-chronos-lib @ git+https://github.com/dM1307/Order-lib.git@add-api-logic#egg=chronos-lib
+cp_lib @ git+https://github.com/dM1307/Order-lib.git@add-api-logic#egg=cp_lib
