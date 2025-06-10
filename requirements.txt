@@ -1,6 +1,8 @@
 flask
 flask_sqlalchemy
 flasgger
+fastapi
+uvicorn
 psycopg2-binary
 python-dotenv
 pytest

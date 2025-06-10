@@ -1,48 +1,47 @@
+from flask import Blueprint, request, jsonify
+from cp_api.dependencies import get_current_user
+from cp_lib.services.jobs_service import JobService, JobNotFound
+from flask import abort
+from cp_lib.models.schemas import JobRead
 # app/controllers/job_controller.py
 
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
-from app.dependencies import get_current_user
-from chronos_lib.services import JobService, JobNotFound
-from chronos_lib.schemas import JobCreate, JobRead
 
-router = APIRouter()
+job_bp = Blueprint('job_bp', __name__)
 
 
 def get_job_service():
     return JobService()
 
 
-@router.post("/", response_model=List[JobRead])
-def create_jobs(
-    body: List[JobCreate],
-    user=Depends(get_current_user),
-    svc: JobService = Depends(get_job_service)
-):
+@job_bp.route("/jobs", methods=["POST"])
+def create_jobs():
+    body = request.get_json()
+    user = get_current_user()
+    svc = get_job_service()
+
     client_id = user["sub"]  # or user["client_id"]
-    created = [svc.create_job(**job.dict(), client_id=client_id) for job in body]
-    return [JobRead(**j.to_dict()).dict() for j in created]
+    created = [svc.create_job(**job, client_id=client_id) for job in body]
+    return jsonify([JobRead(**j.to_dict()).dict() for j in created])
 
 
-@router.get("/", response_model=List[JobRead])
-def list_jobs(
-    user=Depends(get_current_user),
-    svc: JobService = Depends(get_job_service)
-):
+@job_bp.route("/jobs", methods=["GET"])
+def list_jobs():
+    user = get_current_user()
+    svc = get_job_service()
+
     client_id = user["sub"]
     jobs = svc.list_jobs(client_id=client_id)
-    return [JobRead(**j.to_dict()).dict() for j in jobs]
+    return jsonify([JobRead(**j.to_dict()).dict() for j in jobs])
 
 
-@router.get("/{job_id}", response_model=JobRead)
-def get_job(
-    job_id: str,
-    user=Depends(get_current_user),
-    svc: JobService = Depends(get_job_service)
-):
+@job_bp.route("/jobs/<string:job_id>", methods=["GET"])
+def get_job(job_id: str):
+    user = get_current_user()
+    svc = get_job_service()
+
     client_id = user["sub"]
     try:
         job = svc.get_job(job_id, client_id=client_id)
-        return JobRead(**job.to_dict()).dict()
+        return jsonify(JobRead(**job.to_dict()).dict())
     except JobNotFound:
-        raise HTTPException(status_code=404, detail="Job not found")
+        abort(404, description="Job not found")
