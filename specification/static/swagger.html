@@ -1,0 +1,26 @@
+<!-- app/static/swagger.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chronos Scheduler</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css"/>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+  <script>
+    window.ui = SwaggerUIBundle({
+      url: "/specification/openapi.yaml",
+      dom_id: "#swagger-ui",
+      oauth2RedirectUrl: "https://your.redirect.uri/here",
+    });
+    window.ui.initOAuth({
+      clientId: "your_client_id_here",
+      clientSecret: "your_client_secret_here",
+      usePkceWithAuthorizationCodeGrant: true,
+      scopes: "jobs:read jobs:write"
+    });
+  </script>
+</body>
+</html>
