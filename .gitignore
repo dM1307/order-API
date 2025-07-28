@@ -1,0 +1,2 @@
+# .gitignore at the root of your project
+*.egg-info/

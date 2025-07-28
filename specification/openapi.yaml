@@ -1,0 +1,227 @@
+openapi: 3.1.0
+security:
+  - OAuth2:
+      - jobs:read
+      - jobs:write
+info:
+  title: Chronos Scheduler API
+  version: "v1"
+  description: |
+    API for scheduling and querying cron-style jobs.
+servers:
+  - url: https://localhost:5000/v1/docs
+    description: Development server
+
+paths:
+  /jobs:
+    post:
+      summary: Schedule one or more new jobs
+      security:
+        - OAuth2: [jobs:read, jobs:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                job_requests:
+                  type: array
+                  description: A list of jobs to schedule
+                  maxItems: 100
+                  items:
+                    $ref: '#/components/schemas/JobRequest'
+              required:
+                - job_requests
+      responses:
+        '201':
+          description: Jobs scheduled successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The scheduled jobs
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/JobResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: List all scheduled jobs
+      security:
+        - OAuth2: [jobs:read]
+      responses:
+        '200':
+          description: A list of all jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/JobResponse'
+        '404':
+          description: No jobs found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /jobs/{job_id}:
+    get:
+      summary: Get a single job by its ID
+      security:
+        - OAuth2: [jobs:read]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            maxLength: 36
+            example: '123e4567-e89b-12d3-a456-426614174000'
+            pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+          description: The UUID of the job
+      responses:
+        '200':
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8081/realms/chronos-realm/protocol/openid-connect/auth
+          tokenUrl:         http://localhost:8081/realms/chronos-realm/protocol/openid-connect/token
+          scopes:
+            jobs:read:  Read job data
+            jobs:write: Schedule and modify jobs
+  schemas:
+    JobRequest:
+      type: object
+      description: Schema for scheduling a new job
+      additionalProperties: false
+      required:
+        - job_name
+        - schedule
+      properties:
+        job_name:
+          type: string
+          description: A human-readable name for the job
+          maxLength: 100
+          example: "Data Backup Job"
+          pattern: '^[a-zA-Z0-9_ ]{1,100}$'
+        schedule:
+          type: string
+          description: Cron expression (e.g. "*/5 * * * *") or interval (e.g. "every:60")
+          maxLength: 100
+          example: "cron:*/5 * * * *"
+          pattern: '^(cron|every):[0-9a-zA-Z_/-]+$'
+        priority:
+          type: integer
+          description: Job priority (1=highest, 10=lowest)
+          minimum: 1
+          maximum: 10
+          default: 5
+          format: int32
+        retries:
+          type: integer
+          description: Number of retry attempts on failure
+          minimum: 0
+          maximum: 10
+          default: 3
+          format: int32
+
+    JobResponse:
+      type: object
+      description: Details of a scheduled job
+      additionalProperties: false
+      required:
+        - job_id
+        - job_name
+        - schedule
+        - priority
+        - retries
+        - status
+      properties:
+        job_id:
+          type: string
+          description: The UUID assigned to the job
+          format: uuid
+          maxLength: 36
+          example: '123e4567-e89b-12d3-a456-426614174000'
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        job_name:
+          type: string
+          description: The name given at creation
+          maxLength: 100
+          example: "Data Backup Job"
+          pattern: '^[a-zA-Z0-9_ ]{1,100}$'
+        schedule:
+          type: string
+          description: The jobs schedule string
+          maxLength: 100
+          example: "cron:*/5 * * * *"
+          pattern: '^(cron|every):[0-9a-zA-Z_/-]+$'
+        priority:
+          type: integer
+          example: 5
+        retries:
+          type: integer
+          example: 3
+        status:
+          type: string
+          description: Current job status (PENDING, RUNNING, SUCCESS, FAILED)
+          enum: [PENDING, RUNNING, SUCCESS, FAILED]
+
+    ErrorResponse:
+      type: object
+      description: Error response schema
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+          description: Error message
+          maxLength: 255
+          example: "Invalid job name format"
+          pattern: '^[a-zA-Z0-9_ ]{1,255}$'
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400, 404, 401, 406]
+          example: 400

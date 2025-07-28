@@ -1,0 +1,230 @@
+{
+    "version": "2.0.0",
+    "runtimeConfiguration": {
+        "environment": "default",
+        "laxTestingModeEnabled": false,
+        "apiConnectivityCheck": true,
+        "logLevel": "error",
+        "logDestination": "stdout+platform",
+        "logMaxFileSize": 2147483648,
+        "requestHeaderNameRequestId": "x-scan-request-id",
+        "requestHeaderNameScenarioId": "x-scan-scenario-id",
+        "requestHeaderNameRequestType": "x-scan-request-type",
+        "requestFlowrate": 100,
+        "requestTimeout": 30,
+        "requestTlsInsecureSkipVerify": true,
+        "responseFollowRedirection": false,
+        "responseMaxBodySizeScan": 10485760,
+        "happyPathOnly": false,
+        "maxRequestRetryAttempts": 5,
+        "maxScanDuration": 1800,
+        "memoryLimit": 2147483648,
+        "memoryTimeSpan": 10,
+        "reportMaxRequestSizeHappyPath": 8092,
+        "reportMaxRequestSizeTest": 8092,
+        "reportIncludeRequestBody": true,
+        "reportIncludeResponseBody": true,
+        "reportMaxHttpResponseSizeHappyPath": 8092,
+        "reportMaxBodySizeHappyPath": 8092,
+        "reportMaxHttpResponseSizeTest": 8092,
+        "reportMaxBodySizeTest": 8092,
+        "reportIssuesOnly": false,
+        "reportMaxIssues": 1000,
+        "reportMaxSize": 20971520,
+        "reportGenerateCurlCommand": true,
+        "normalizeServerUrls": true
+    },
+    "customizations": {
+        "happyPaths": {
+            "retry": 1,
+            "responsePolicy": {
+                "httpStatusExpected": true,
+                "mustBeConformant": true
+            },
+            "httpStatusExpected": []
+        },
+        "tests": {
+            "responsePolicy": {
+                "httpStatusExpected": true,
+                "mustBeConformant": true
+            }
+        }
+    },
+    "authenticationDetails": [
+        {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "default": "ApiKeyAuth",
+                "credentials": {
+                    "ApiKeyAuth": {
+                        "description": "ApiKeyAuth security",
+                        "credential": "{{ApiKeyAuth}}"
+                    }
+                }
+            }
+        }
+    ],
+    "operations": {
+        "/jobs/{job_id}:get": {
+            "operationId": "/jobs/{job_id}:get",
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "fuzzing": true,
+                    "requests": [
+                        {
+                            "$ref": "#/operations/~1jobs~1{job_id}:get/request",
+                            "fuzzing": true
+                        }
+                    ]
+                }
+            ],
+            "request": {
+                "operationId": "/jobs/{job_id}:get",
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "url": "{{host}}/jobs/{job_id}",
+                        "method": "GET",
+                        "paths": [
+                            {
+                                "key": "job_id",
+                                "value": "oghhapfsvxotrcrnpodimkppeapmfjgj"
+                            }
+                        ]
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    },
+                    "404": {
+                        "expectations": {
+                            "httpStatus": 404
+                        }
+                    }
+                }
+            }
+        },
+        "/jobs:get": {
+            "operationId": "/jobs:get",
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "fuzzing": true,
+                    "requests": [
+                        {
+                            "$ref": "#/operations/~1jobs:get/request",
+                            "fuzzing": true
+                        }
+                    ]
+                }
+            ],
+            "request": {
+                "operationId": "/jobs:get",
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "url": "{{host}}/jobs",
+                        "method": "GET"
+                    }
+                },
+                "defaultResponse": "200",
+                "responses": {
+                    "200": {
+                        "expectations": {
+                            "httpStatus": 200
+                        }
+                    }
+                }
+            }
+        },
+        "/jobs:post": {
+            "operationId": "/jobs:post",
+            "scenarios": [
+                {
+                    "key": "happy.path",
+                    "fuzzing": true,
+                    "requests": [
+                        {
+                            "$ref": "#/operations/~1jobs:post/request",
+                            "fuzzing": true
+                        }
+                    ]
+                }
+            ],
+            "request": {
+                "operationId": "/jobs:post",
+                "request": {
+                    "type": "42c",
+                    "details": {
+                        "url": "{{host}}/jobs",
+                        "method": "POST",
+                        "headers": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "requestBody": {
+                            "mode": "json",
+                            "json": {
+                                "job_requests": [
+                                    {
+                                        "job_name": "fuozstjhuyexirlnospxrngsdabkvsgr",
+                                        "priority": 5,
+                                        "retries": 3,
+                                        "schedule": "rdhejgnkoqdcmsbqibvrtxzxymsselms"
+                                    },
+                                    {
+                                        "job_name": "psojycwadmvwenclodgdvcynfwgmixrf",
+                                        "priority": 5,
+                                        "retries": 3,
+                                        "schedule": "zvmggwwfykjljubkclprirwmbdcdmcmy"
+                                    },
+                                    {
+                                        "job_name": "thmhmqdamkigkajlptjxtfmsgxbjkbzd",
+                                        "priority": 5,
+                                        "retries": 3,
+                                        "schedule": "mdyyjknrfnlkxebqmtzvtilfbkosyjah"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "defaultResponse": "201",
+                "responses": {
+                    "201": {
+                        "expectations": {
+                            "httpStatus": 201
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "environments": {
+        "default": {
+            "variables": {
+                "ApiKeyAuth": {
+                    "from": "environment",
+                    "name": "SCAN42C_SECURITY_APIKEYAUTH",
+                    "required": false,
+                    "default": "secret_to_be_overridden"
+                },
+                "host": {
+                    "from": "environment",
+                    "name": "SCAN42C_HOST",
+                    "required": false,
+                    "default": "http://localhost:18512/v1/docs"
+                }
+            }
+        }
+    }
+}
