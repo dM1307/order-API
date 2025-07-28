@@ -1,5 +1,8 @@
 flask
 flask_sqlalchemy
+flask-cors
+PyJWT
+requests
 flasgger
 fastapi
 uvicorn

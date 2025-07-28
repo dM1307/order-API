@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from cp_api.dependencies import get_current_user
+from cp_api.auth import token_required
 from cp_lib.services.jobs_service import JobService, JobNotFound
 from flask import abort
 from cp_lib.models.schemas import JobRead
@@ -14,6 +15,7 @@ def get_job_service():
 
 
 @job_bp.route("/jobs", methods=["POST"])
+@token_required
 def create_jobs():
     body = request.get_json()
     user = get_current_user()
@@ -25,6 +27,7 @@ def create_jobs():
 
 
 @job_bp.route("/jobs", methods=["GET"])
+@token_required
 def list_jobs():
     user = get_current_user()
     svc = get_job_service()
@@ -35,6 +38,7 @@ def list_jobs():
 
 
 @job_bp.route("/jobs/<string:job_id>", methods=["GET"])
+@token_required
 def get_job(job_id: str):
     user = get_current_user()
     svc = get_job_service()
