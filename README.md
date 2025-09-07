@@ -154,12 +154,6 @@ Use Swagger UI or Postman with a valid access token.
 
 ---
 
-## 📘 License
-
-MIT License © 2025 [Dinesh Maharana](https://github.com/dM1307)
-
----
-
 ## 🙌 Contributions
 
 * Fork the repo
