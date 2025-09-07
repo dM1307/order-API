@@ -170,8 +170,8 @@ MIT License © 2025 [Dinesh Maharana](https://github.com/dM1307)
 
 ## 🔗 Related Projects
 
-* [Chronos LIB](https://github.com/dM1307/chronos-lib)
-* [Chronos Orchestrator](https://github.com/dM1307/chronos-orchestrator)
+* [Chronos LIB](https://github.com/dM1307/Order-lib)
+* [Chronos Orchestrator](https://github.com/dM1307/Orchestrator)
 
 ---
 
