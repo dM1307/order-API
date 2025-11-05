@@ -154,14 +154,6 @@ Use Swagger UI or Postman with a valid access token.
 
 ---
 
-## 🙌 Contributions
-
-* Fork the repo
-* Create a feature branch
-* Open a PR with clear title/description
-
----
-
 ## 🔗 Related Projects
 
 * [Chronos LIB](https://github.com/dM1307/Order-lib)
